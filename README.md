@@ -1,75 +1,103 @@
 # Smart RAG Document Assistant
 
-An intelligent document assistant powered by Retrieval-Augmented Generation (RAG). Upload your documents, ask questions in natural language, and get accurate answers grounded in your own data — with source references.
+## Overview
+The Smart RAG Document Assistant is an advanced Retrieval-Augmented Generation (RAG) system built to answer questions accurately by extracting facts from a local corpus of PDF files. The pipeline is fully deterministic and avoids hallucinations by anchoring generation entirely to retrieved context. 
 
----
+The core flow is: 
+`PDF documents → text extraction → cleaning → recursive chunking → local embeddings → ChromaDB → semantic retrieval → Ollama → grounded answer + sources.`
 
-## 📁 Project Structure
+## Current Status
+**The core RAG backend is 100% complete and ready for integration.** 
 
+**Completed:**
+- Complete RAG core logic
+- Refined dataset (5 scientific/historical PDFs, 15 pages)
+- Chroma persisted vector store with clean indexing
+- Local LLM generation via Ollama (`llama3.2:3b`)
+- Automated 10-question evaluation suite
+- Fully decoupled, reusable `rag_core.py` module
+
+**Pending:**
+- FastAPI API wiring
+- Frontend user interface
+- API tests
+- Final demo video and deployment
+
+## Architecture
 ```text
-rag-assistant-project/
-│
-├── notebooks/
-│   └── rag_pipeline.ipynb          # Experimentation & prototyping
-│
-├── backend/
-│   ├── app/
-│   │   ├── main.py                 # FastAPI entry point
-│   │   ├── api/routes/query.py     # Query endpoint
-│   │   ├── core/config.py          # App configuration
-│   │   ├── schemas/query.py        # Request/response models
-│   │   ├── services/
-│   │   │   ├── retrieval.py        # Document retrieval service
-│   │   │   └── generation.py       # LLM generation service
-│   │   └── utils/logging_config.py # Logging setup
-│   │
-│   ├── data/vector_store/          # Persisted vector database
-│   ├── tests/test_query.py         # API tests
-│   ├── requirements.txt
-│   ├── .env.example
-│   └── Dockerfile
-│
-├── frontend/
-│   ├── app.py                      # Streamlit UI
-│   ├── api_client.py               # Backend API client
-│   ├── .env.example
-│   └── requirements.txt
-│
-├── data/
-│   └── documents/                  # Raw input documents
-│
-├── .gitignore
-├── PROJECT_PLAN.md
-└── README.md
+PDF Documents
+      ↓
+    PyPDF
+      ↓
+  Cleaning
+      ↓
+Recursive Chunking
+      ↓
+all-MiniLM-L6-v2 (Embeddings)
+      ↓
+  ChromaDB
+      ↓
+  Retriever
+      ↓
+   Context
+      ↓
+Ollama llama3.2:3b
+      ↓
+Answer + Sources
 ```
 
----
+## Tech Stack
+- **Python 3.12**
+- **Jupyter**
+- **PyPDF**
+- **LangChain Text Splitters**
+- **Sentence Transformers**
+- **all-MiniLM-L6-v2**
+- **ChromaDB**
+- **Ollama**
+- **llama3.2:3b**
+- **Pandas**
+- **FastAPI** (planned/in progress)
+- **Streamlit or Gradio** (planned/in progress)
 
-## 🔑 Key Features
+## Dataset
+The system operates on an expansive high-quality corpus of 5 realistic PDF files totaling 15 pages of rich data.
+- **Topics include**: Machine Learning, Quantum Mechanics, Ancient Egypt, Nutrition, and Climate Change.
 
-- **Document Ingestion** — Load PDFs, text files, and other document formats
-- **Semantic Chunking** — Split documents into meaningful chunks for embedding
-- **Vector Search** — Fast similarity search using ChromaDB / FAISS
-- **LLM-Powered Answers** — Generate accurate, context-grounded responses
-- **Source Attribution** — Every answer includes references to source documents
-- **Chat Interface** — Interactive Streamlit frontend with conversation history
+## RAG Configuration
+The RAG pipeline operates under the following fine-tuned parameters (managed in `backend/config.yaml`):
+- `chunk_size` = 700
+- `chunk_overlap` = 100
+- `embedding_model` = all-MiniLM-L6-v2
+- `ollama_model` = llama3.2:3b
+- `collection_name` = science_docs
+- `top_k` = 4
 
----
+## RAG Usage
+The RAG module is fully abstracted. Backend developers can natively query the system by importing the singleton:
 
-## 🛠️ Tech Stack
+```python
+from backend.app.services.rag_core import rag_core
 
-| Layer      | Technology                    |
-|------------|-------------------------------|
-| Backend    | FastAPI, Uvicorn              |
-| Frontend   | Streamlit                     |
-| LLM        | OpenAI / Ollama               |
-| Embeddings | OpenAI / HuggingFace          |
-| Vector DB  | ChromaDB / FAISS              |
-| Notebook   | Jupyter                       |
-| Container  | Docker                        |
+response = rag_core.rag_query("What is machine learning?")
+# { "question": "...", "answer": "...", "sources": [...] }
+```
 
----
+## Evaluation
+The pipeline includes a fully automated deterministic evaluation process:
+- Tests against 10 diverse questions (Normal, Complex, Out-of-Domain).
+- Verifies grounded context ingestion.
+- Ensures the LLM respectfully rejects out-of-domain prompts.
+- All evaluation results are automatically exported to `notebooks/evaluation_results.csv`.
 
-## 📋 Project Phases
+## Setup
+To initialize the RAG module locally:
 
-See [PROJECT_PLAN.md](./PROJECT_PLAN.md) for the full development roadmap.
+1. Create a Python virtual environment: `python -m venv .venv`
+2. Activate the environment and install requirements: `pip install -r backend/requirements.txt`
+3. Download and install [Ollama](https://ollama.com/)
+4. Pull the target model: `ollama pull llama3.2:3b`
+5. Execute the evaluation notebook: Run `notebooks/rag_pipeline.ipynb` to verify your environment.
+
+## Next Development Stage
+**The next developer should build the FastAPI layer and frontend using the existing `rag_core.py`.** The RAG pipeline requires no further tuning for the backend endpoints to be scaffolded.

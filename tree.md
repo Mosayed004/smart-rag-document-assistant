@@ -1,53 +1,52 @@
-# 📁 Project Tree — Smart RAG Document Assistant
+# Project Tree Structure
 
 ```text
-rag-assistant-project/
-│
-├── .gitignore
+smart-rag-document-assistant/
 ├── README.md
 ├── PROJECT_PLAN.md
-│
+├── tree.md
+├── .gitignore
 ├── data/
-│   └── documents/                      # Raw input documents (PDF, TXT, DOCX)
-│
+│   └── documents/
+│       ├── ancient_egypt_history.pdf
+│       ├── climate_change_report_2023.pdf
+│       ├── machine_learning_basics.pdf
+│       ├── nutrition_and_health.pdf
+│       └── quantum_mechanics.pdf
 ├── notebooks/
-│   └── rag_pipeline.ipynb              # Jupyter notebook for RAG experimentation
-│
+│   ├── rag_pipeline.ipynb
+│   └── evaluation_results.csv
+├── docs/
+│   └── RAG_ARCHITECTURE.md
 ├── backend/
-│   ├── .env.example                    # Backend environment variables template
-│   ├── requirements.txt                # Backend Python dependencies
-│   ├── Dockerfile                      # Docker container definition
-│   │
-│   ├── app/
-│   │   ├── main.py                     # FastAPI application entry point
-│   │   │
-│   │   ├── api/
-│   │   │   └── routes/
-│   │   │       └── query.py            # /query API endpoint
-│   │   │
-│   │   ├── core/
-│   │   │   └── config.py              # App settings & env loading
-│   │   │
-│   │   ├── schemas/
-│   │   │   └── query.py               # Pydantic request/response models
-│   │   │
-│   │   ├── services/
-│   │   │   ├── retrieval.py           # Document retrieval service
-│   │   │   └── generation.py          # LLM generation service
-│   │   │
-│   │   └── utils/
-│   │       └── logging_config.py      # Logging configuration
-│   │
+│   ├── config.yaml
+│   ├── requirements.txt
 │   ├── data/
-│   │   └── vector_store/              # Persisted vector database
-│   │
-│   └── tests/
-│       └── test_query.py              # Backend API tests
-│
-└── frontend/
-    ├── .env.example                    # Frontend environment variables template
-    ├── requirements.txt                # Frontend Python dependencies
-    ├── app.py                          # Streamlit chat interface
-    └── api_client.py                   # HTTP client for backend API
+│   │   └── vector_store/
+│   │       ├── chroma.sqlite3
+│   │       └── b22af4ef-7866-4af2-a840-060f13efd5d0/
+│   │           └── data_level0.bin, header.bin, length.bin, link_lists.bin
+│   └── app/
+│       ├── __init__.py
+│       ├── main.py                # Pending implementation
+│       ├── api/
+│       │   ├── __init__.py
+│       │   └── routes/            # Pending implementation
+│       │       └── __init__.py
+│       ├── core/                  # Pending implementation
+│       │   └── __init__.py
+│       ├── schemas/               # Pending implementation
+│       │   └── __init__.py
+│       ├── services/
+│       │   ├── __init__.py
+│       │   ├── rag_core.py
+│       │   ├── retrieval.py       # Pending implementation
+│       │   └── generation.py      # Pending implementation
+│       └── utils/                 # Pending implementation
+│           └── __init__.py
+└── frontend/                      # Pending implementation
+    ├── app.py                     # Pending implementation
+    └── api_client.py              # Pending implementation
 ```
 
+*Note: Caches, environments (.venv), model downloads, and temporary files are strictly ignored.*
