@@ -1,0 +1,5 @@
+rag:
+  chunk_size: 700
+  chunk_overlap: 100
+  embedding_model: "all-MiniLM-L6-v2"
+  ollama_model: "llama3.2:3b"
