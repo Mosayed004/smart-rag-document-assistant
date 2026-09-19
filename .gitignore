@@ -28,5 +28,3 @@ huggingface/
 .pytest_cache/
 .coverage
 htmlcov/
-
-# Chroma temporary files (optional)
